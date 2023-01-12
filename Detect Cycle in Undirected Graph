@@ -1,0 +1,52 @@
+#include<iostream>
+#include<vector>
+#include<queue>
+#include<climits>
+using namespace std;
+void add(vector<int>adj[],int u,int v){
+  adj[u].push_back(v);
+  adj[v].push_back(u);
+}
+bool DFSRec(vector<int>adj[],int s,int visited[],int parent){
+  visited[s]=true;
+  for(auto i:adj[s]){
+    if(visited[i]==false){
+      if(DFSRec(adj,i,visited,s)==true){//update parent
+        return true;
+      }
+      }
+      else if(i!=parent){//i.e loop is there we again come to visited node
+        return true;
+      }
+  }
+  return false;
+}
+bool cycle(vector<int>adj[],int V){
+  int visited[V];
+  //initialise visited array
+  for(int i=0;i<V;i++){
+    visited[i]=false;
+  }
+  //Disconnected nodes can also be there
+  for(int i=0;i<V;i++){
+    if(visited[i]==false){
+    if(DFSRec(adj,i,visited,-1)){
+      //initially -1 parent ko maan lengei.e koi parent nhi h
+      return true;
+    }
+      }
+  }
+  return false;
+}
+int main(){
+  int V=6;
+  vector<int>adj[V];
+  add(adj,0,1);
+  add(adj,1,2);
+  add(adj,2,3);
+  add(adj,2,4);
+  add(adj,4,5);
+  cout<<cycle(adj,V);
+  
+  return 0;
+}
